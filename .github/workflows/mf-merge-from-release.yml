@@ -23,6 +23,7 @@ jobs:
     - name: Merge from Develop to PR
       uses: maven-flow/merge@${{ inputs.action-ref }}
       with:
+        push-changes: false
         source-branch: ${{ inputs.release-branch }}
         target-branch: ${{ github.ref_name }}
 
