@@ -12,3 +12,4 @@ First released version.
 ### Added
 
 - Fruit interface
+- Apple
