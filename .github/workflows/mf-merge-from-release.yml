@@ -1,0 +1,34 @@
+name: Test Merge from Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      action-ref:
+        type: string
+        required: true
+      release-branch:
+        type: string
+        required: true
+
+jobs:
+
+  merge-from-release:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0                  # the full GIT history needs to be checked out
+
+    - name: Merge from Develop to PR
+      uses: maven-flow/merge@${{ inputs.action-ref }}
+      with:
+        source-branch: ${{ inputs.release-branch }}
+        target-branch: ${{ github.ref_name }}
+
+    - name: Check pom.xml
+      run: diff pom.xml expected-files/from-release-to-develop/pom.xml
+
+    - name: Check CHANGELOG.md
+      if: always()                      # do this check even if previous check fails
+      run: diff CHANGELOG.md expected-files/from-release-to-develop/CHANGELOG.md

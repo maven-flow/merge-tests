@@ -1,0 +1,33 @@
+name: Test Merge from Develop
+
+on:
+  workflow_dispatch:
+    inputs:
+      action-ref:
+        type: string
+        required: true
+
+jobs:
+
+  merge-from-develop:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0                  # the full GIT history needs to be checked out
+
+    - name: Merge from Develop to PR
+      uses: maven-flow/merge@${{ inputs.action-ref }}
+      with:
+        changelog-rebase: true
+        push-changes: false
+        source-branch: origin/develop
+        target-branch: ${{ github.ref_name }}
+
+    - name: Check pom.xml
+      run: diff pom.xml expected-files/from-develop-to-feature/pom.xml
+
+    - name: Check CHANGELOG.md
+      if: always()                      # do this check even if previous check fails
+      run: diff CHANGELOG.md expected-files/from-develop-to-feature/CHANGELOG.md
