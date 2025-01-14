@@ -17,8 +17,27 @@ jobs:
       with:
         fetch-depth: 0                  # the full GIT history needs to be checked out
 
-    - name: Merge from Develop to PR
-      uses: maven-flow/merge@${{ inputs.action-ref }}
+    - name: Merge from Develop to PR (develop)
+      if: inputs.action-ref == 'develop'
+      uses: maven-flow/merge@develop
+      with:
+        changelog-rebase: true
+        push-changes: false
+        source-branch: origin/develop
+        target-branch: ${{ github.ref_name }}
+
+    - name: Merge from Develop to PR (main)
+      if: inputs.action-ref == 'main'
+      uses: maven-flow/merge@main
+      with:
+        changelog-rebase: true
+        push-changes: false
+        source-branch: origin/develop
+        target-branch: ${{ github.ref_name }}
+
+    - name: Merge from Develop to PR (v1)
+      if: inputs.action-ref == 'v1'
+      uses: maven-flow/merge@v1
       with:
         changelog-rebase: true
         push-changes: false
