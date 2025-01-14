@@ -45,8 +45,16 @@ jobs:
         target-branch: ${{ github.ref_name }}
 
     - name: Check pom.xml
-      run: diff pom.xml expected-files/from-release-to-develop/pom.xml
+      run: |
+        echo "----------------"
+        cat pom.xml
+        echo "----------------"
+        diff pom.xml expected-files/from-release-to-develop/pom.xml
 
     - name: Check CHANGELOG.md
       if: always()                      # do this check even if previous check fails
-      run: diff CHANGELOG.md expected-files/from-release-to-develop/CHANGELOG.md
+      run: |
+        echo "----------------"
+        cat CHANGELOG.md
+        echo "----------------"
+        diff CHANGELOG.md expected-files/from-release-to-develop/CHANGELOG.md
