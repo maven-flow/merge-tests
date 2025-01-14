@@ -20,15 +20,41 @@ jobs:
       with:
         fetch-depth: 0                  # the full GIT history needs to be checked out
 
-    - name: Merge from Develop to PR
-      uses: maven-flow/merge@${{ inputs.action-ref }}
+    - name: Merge from Release (develop)
+      if: inputs.action-ref == 'develop'
+      uses: maven-flow/merge@develop
       with:
+        push-changes: false
+        source-branch: ${{ inputs.release-branch }}
+        target-branch: ${{ github.ref_name }}
+
+    - name: Merge from Release (main)
+      if: inputs.action-ref == 'main'
+      uses: maven-flow/merge@main
+      with:
+        push-changes: false
+        source-branch: ${{ inputs.release-branch }}
+        target-branch: ${{ github.ref_name }}
+
+    - name: Merge from Release (v1)
+      if: inputs.action-ref == 'v1'
+      uses: maven-flow/merge@v1
+      with:
+        push-changes: false
         source-branch: ${{ inputs.release-branch }}
         target-branch: ${{ github.ref_name }}
 
     - name: Check pom.xml
-      run: diff pom.xml expected-files/from-release-to-develop/pom.xml
+      run: |
+        echo "----------------"
+        cat pom.xml
+        echo "----------------"
+        diff pom.xml expected-files/from-release-to-develop/pom.xml
 
     - name: Check CHANGELOG.md
       if: always()                      # do this check even if previous check fails
-      run: diff CHANGELOG.md expected-files/from-release-to-develop/CHANGELOG.md
+      run: |
+        echo "----------------"
+        cat CHANGELOG.md
+        echo "----------------"
+        diff CHANGELOG.md expected-files/from-release-to-develop/CHANGELOG.md
