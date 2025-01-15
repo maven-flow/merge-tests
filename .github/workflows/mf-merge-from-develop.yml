@@ -48,7 +48,7 @@ jobs:
       run: |
         echo "----------------"
         cat pom.xml
-        echo "----------------"
+        echo -e "\n----------------"
         diff pom.xml expected-files/from-develop-to-feature/pom.xml
 
     - name: Check CHANGELOG.md
@@ -56,5 +56,5 @@ jobs:
       run: |
         echo "----------------"
         cat CHANGELOG.md
-        echo "----------------"
+        echo -e "\n----------------"
         diff CHANGELOG.md expected-files/from-develop-to-feature/CHANGELOG.md
